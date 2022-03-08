@@ -4,6 +4,10 @@
 const express = require("express");
 const router = express.Router(); // create route
 
+router.get('/register', (req, res) => {
+    res.json({ message: 'Hello' });
+});
+
 // // Import User controller
 // const UserController = require("../controllers/userController");
 // // Instantiate a new class instance

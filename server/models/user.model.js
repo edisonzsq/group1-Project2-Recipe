@@ -10,14 +10,7 @@ module.exports = function (sequelize) {
         primaryKey: true,
         autoIncrement: true,
       },
-
-      userName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        field: "username",
-      },
-
+// Liew deleted Username since it is not in DB.
       emailAddress: {
         type: DataTypes.STRING,
         allowNull: false,

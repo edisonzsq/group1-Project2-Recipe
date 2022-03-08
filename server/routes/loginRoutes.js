@@ -6,6 +6,9 @@ const router = express.Router(); // create route
 const cors = require('cors'); // middleware
 const user = require('../models/user.model');
 const jwt = require('jsonwebtoken');
+const morgan = require('morgan');
+const helmet = require('helmet');
+const middlewares = require('./middlewares'); // error-handling middleware from Express-API-Starter
 
 // Import User controller
 const UserController = require("../controllers/userController");
@@ -14,10 +17,17 @@ const { json } = require("body-parser");
 // Instantiate a new class instance
 const userController = new UserController();
 
+router.use(morgan('dev'));
+router.use(helmet());
+router.use(cors());
+router.use(express.json());
+router.use(middlewares.notFound);
+router.use(middlewares.errorHandler);
+
 router.post('/login', async(req, res) => {
   const { email, password } = req.body; // Get email & password from body parser.
   const userEmail = await user        // Checking email with DB.
-    .findOne({ where: { email } })
+    .findOne({ where: { emailAddress } })
     .catch((err) => {
       console.log('Error: ', err);
     });
@@ -25,7 +35,7 @@ router.post('/login', async(req, res) => {
   if(!userEmail)                          // If email doesn't match DB.
     return res.json( {message: 'Email / Password does not match!'});
 
-  if(userEmail.password !== password)     // If password doesn't match DB.
+  if(userEmail.password !== passWord)     // If password doesn't match DB.
     return res.json({message: 'Email / Password does not match!' });
 
     const jwtToken = jwt.sign({id: userEmail.id, email: userEmail.email, expiresIn: '1h'}, process.env.JWT_KEY);
